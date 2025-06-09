@@ -42,6 +42,15 @@ pipeline {
             }
         }
 
+         stage('Provision via Ansible') {
+            steps {
+                echo '🔧 Provision infrastructure with Ansible'
+                sh '''
+                    ansible-playbook -i ansible/inventory ansible/playbook.yml
+                '''
+            }
+        }
+
         stage('Deploy to Test Environment') {
             steps {
                 echo '🚀 Run Flask app in background'

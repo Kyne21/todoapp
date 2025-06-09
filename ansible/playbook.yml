@@ -1,0 +1,24 @@
+---
+- name: Provision Flask App on Localhost
+  hosts: local
+  become: true
+  tasks:
+    - name: Install dependencies
+      apt:
+        name:
+          - python3-venv
+          - python3-pip
+        update_cache: yes
+
+    - name: Create virtual environment
+      command: python3 -m venv /tmp/jenkins_venv
+      args:
+        creates: /tmp/jenkins_venv
+
+    - name: Install requirements
+      shell: |
+        source /tmp/jenkins_venv/bin/activate
+        pip install --upgrade pip
+        pip install -r requirements.txt
+      args:
+        chdir: "{{ lookup('env', 'WORKSPACE') }}"
